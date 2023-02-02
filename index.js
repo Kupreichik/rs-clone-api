@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 
 const app = express();
 
+mongoose.set('strictQuery', true);
 mongoose
   .connect(
     'mongodb+srv://admin:yyyyyy@cluster0.qbtixrj.mongodb.net/?retryWrites=true&w=majority'
