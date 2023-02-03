@@ -2,7 +2,8 @@ import userModel from '../models/User.js'
 
 export const checkUsername = async (req, res) => {
   try {
-    const user = await userModel.findOne({ username: req.query.username });
+    console.log(req.params.uniqName);
+    const user = await userModel.findOne({ username: req.params.uniqName });
 
     if (!user) {
       return res.json({
