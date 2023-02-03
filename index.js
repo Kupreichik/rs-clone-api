@@ -12,7 +12,7 @@ export const app = express();
 mongoose.set('strictQuery', true);
 mongoose
   .connect(
-    'mongodb+srv://admin:yyyyyy@cluster0.qbtixrj.mongodb.net/?retryWrites=true&w=majority'
+    'mongodb+srv://admin:yyyyyy@cluster0.qbtixrj.mongodb.net/CodePen-clone?retryWrites=true&w=majority'
   )
   .then(() => console.log('DB connect successfully'))
   .catch((err) => console.log('DB error', err));
@@ -36,6 +36,7 @@ const swaggerOptions = {
 const specs = swaggerJSDoc(swaggerOptions);
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 
+app.use(express.json());
 app.use(cors());
 app.use('/users', usersRouter);
 
