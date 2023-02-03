@@ -1,7 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import usersRouter from './routes/users.js'
 
-const app = express();
+export const app = express();
 
 mongoose.set('strictQuery', true);
 mongoose
@@ -10,6 +11,8 @@ mongoose
   )
   .then(() => console.log('DB connect successfully'))
   .catch((err) => console.log('DB error', err));
+
+app.use('/users', usersRouter);
 
 app.listen(3033, (err) => {
   if (err) return console.log(err);
