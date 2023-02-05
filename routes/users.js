@@ -15,7 +15,7 @@ const router = express.Router();
 *         - name
 *         - username
 *         - email
-*         - passwordHash
+*         - token
 *       properties:
 *         name:
 *           type: string
@@ -26,14 +26,14 @@ const router = express.Router();
 *         email:
 *           type: string
 *           description: The uniq user email
-*         passwordHash:
+*         token:
 *           type: string
-*           description: The computed password hash
+*           description: Security token to access
 *       example:
 *         name: Bill Gates
 *         username: billy55
 *         email: billy@mail.com
-*         passwordHash: $2b$10$ie7tCwbBDBg81f.SLcXdAuZOHZM5Rw5Fogfr8fAzjnTVxXxDxxJkW
+*         token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImN1bm5pbmdGIiwiaWF0IjoxNjc1NTkxMTEyLCJleHAiOjE2NzgxODMxMTJ9._hCcdCrFpEvvS6Xj2FmfneiGFk3STrvw99InC6uQLMw
 *     UserData:
 *       type: object
 *       required:

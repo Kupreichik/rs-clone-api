@@ -6,15 +6,10 @@ export const checkUsername = async (req, res) => {
   try {
     const user = await UserModel.findOne({ username: req.params.uniqName });
 
-    if (!user) {
-      return res.json({
-        canUse: true,
-      });
-    } else {
-      return res.json({
-        canUse: false,
-      });
-    }
+    return res.json({
+      canUse: !user,
+    });
+
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -25,24 +20,19 @@ export const checkUsername = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
+    const { name, username, email, password } = req.body;
 
-    const usedEmail = await UserModel.findOne({ email: req.body.email });
+    const usedEmail = await UserModel.findOne({ email });
     if (usedEmail) {
       return res.status(403).json({
         message: 'User with this email is already registered',
       });
     }
 
-    const password = req.body.password;
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
 
-    const doc = new UserModel({
-      name: req.body.name,
-      username: req.body.username,
-      email: req.body.email,
-      passwordHash: hash,
-    });
+    const doc = new UserModel({ name, username, email, passwordHash: hash });
 
     const user = await doc.save();
 
