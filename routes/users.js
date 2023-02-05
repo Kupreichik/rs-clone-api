@@ -58,7 +58,7 @@ const router = express.Router();
 *         name: Bill Gates
 *         username: billy55
 *         email: billy@mail.com
-*         passwordHash: qwerty
+*         password: qwerty
 */
 /**
 * @swagger
@@ -101,7 +101,7 @@ router.get('/username/:uniqName', userController.checkUsername);
 * @swagger
 * /users/register:
 *   post:
-*     summary: create new user
+*     summary: Create new user
 *     tags: [Users]
 *     requestBody:
 *       required: true

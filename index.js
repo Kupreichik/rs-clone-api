@@ -14,7 +14,7 @@ mongoose
   .connect(
     'mongodb+srv://admin:yyyyyy@cluster0.qbtixrj.mongodb.net/CodePen-clone?retryWrites=true&w=majority'
   )
-  .then(() => console.log('DB connect successfully'))
+  .then(() => console.log('DB connected successfully'))
   .catch((err) => console.log('DB error', err));
 
 const swaggerOptions = {
