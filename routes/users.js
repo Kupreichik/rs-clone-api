@@ -128,8 +128,66 @@ router.get('/username/:uniqName', userController.checkUsername);
 *                   example: User with this email is already registered
 *       500:
 *         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Failed to register
 */
-
 router.post('/register', registerValidation, handleValidationErrors, userController.register);
+
+/**
+* @swagger
+* /users/login:
+*   post:
+*     summary: User authorization
+*     tags: [Users]
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               identifier:
+*                 type: string
+*                 description: Username or email for login
+*                 example: billy55
+*               password:
+*                 type: string
+*                 description: Password for login
+*                 example: qwerty
+*     responses:
+*       200:
+*         description: User was successfully login
+*         content:
+*           application/json:
+*             schema:
+*             $ref: '#/components/schemas/User'
+*       403:
+*         description: Username or password is incorrect
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: The username or password you entered is incorrect, please try again
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Failed to login
+*/
+router.post('/login', userController.login)
 
 export default router;

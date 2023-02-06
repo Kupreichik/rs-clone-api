@@ -60,3 +60,45 @@ export const register = async (req, res) => {
     });
   }
 };
+
+export const login = async (req, res) => {
+  try{
+    const accessError = {
+        message:
+          'The username or password you entered is incorrect, please try again',
+      }
+    const { identifier, password } = req.body;
+    const user =
+      (await UserModel.findOne({ username: identifier })) ||
+      (await UserModel.findOne({ email: identifier }));
+
+    if (!user) return res.status(403).json(accessError);
+
+    const isValidPass = await bcrypt.compare(password, user._doc.passwordHash);
+
+    if (!isValidPass) return res.status(403).json(accessError);
+
+    const token = jwt.sign(
+      {
+        username: user.username,
+      },
+      'secretCode007',
+      {
+        expiresIn: '30d',
+      }
+    );
+
+    const { passwordHash, _id, __v, ...userData } = user._doc;
+
+    res.json({
+      ...userData,
+      token,
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Failed to login',
+    });
+  }
+}
