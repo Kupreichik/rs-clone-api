@@ -33,7 +33,7 @@ const router = express.Router();
 *         name: Bill Gates
 *         username: billy55
 *         email: billy@mail.com
-*         token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImN1bm5pbmdGIiwiaWF0IjoxNjc1NTkxMTEyLCJleHAiOjE2NzgxODMxMTJ9._hCcdCrFpEvvS6Xj2FmfneiGFk3STrvw99InC6uQLMw
+*         token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJpbGx5NTUiLCJpYXQiOjE2NzU2OTY5MjIsImV4cCI6MTY3ODI4ODkyMn0.CqGPEWCJZYAlkUaMHRcPTn1wRXtdLhRSHi2qiHxr6dI
 *     UserData:
 *       type: object
 *       required:
@@ -59,6 +59,11 @@ const router = express.Router();
 *         username: billy55
 *         email: billy@mail.com
 *         password: qwerty
+*   securitySchemes:
+*     bearerAuth:
+*       type: http
+*       scheme: bearer
+*       bearerFormat: JWT
 */
 /**
 * @swagger
@@ -128,8 +133,104 @@ router.get('/username/:uniqName', userController.checkUsername);
 *                   example: User with this email is already registered
 *       500:
 *         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Failed to register
 */
-
 router.post('/register', registerValidation, handleValidationErrors, userController.register);
+
+/**
+* @swagger
+* /users/login:
+*   post:
+*     summary: User authorization
+*     tags: [Users]
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               identifier:
+*                 type: string
+*                 description: Username or email for login
+*                 example: billy55
+*               password:
+*                 type: string
+*                 description: Password for login
+*                 example: qwerty
+*     responses:
+*       200:
+*         description: User was successfully login
+*         content:
+*           application/json:
+*             schema:
+*             $ref: '#/components/schemas/User'
+*       403:
+*         description: Username or password is incorrect
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: The username or password you entered is incorrect, please try again
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Failed to login
+*/
+router.post('/login', userController.login);
+
+/**
+* @swagger
+* /users/me:
+*   get:
+*     summary: Returns the data of an authorized user
+*     tags: [Users]
+*     security:
+*       - bearerAuth: []
+*     responses:
+*       200:
+*         description: User authorization confirmed
+*         content:
+*           application/json:
+*             schema:
+*             $ref: '#/components/schemas/User'
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.get('/me', userController.checkAuth, userController.getMe);
 
 export default router;
