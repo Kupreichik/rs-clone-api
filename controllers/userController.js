@@ -102,3 +102,44 @@ export const login = async (req, res) => {
     });
   }
 }
+
+export const checkAuth = (req, res, next) => {
+  const accessError = {
+    message: 'Access token is missing or invalid',
+  };
+  const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
+
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, 'secretCode007');
+      req.username = decoded.username;
+      next();
+    } catch (e) {
+      return res.status(403).json(accessError);
+    }
+  } else {
+    return res.status(403).json(accessError);
+  }
+};
+
+export const getMe = async (req, res) => {
+  try {
+    const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
+    const user = await UserModel.findOne({ username: req.username });
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'User is not found',
+      });
+    }
+
+    const { passwordHash, _id, __v, ...userData } = user._doc;
+
+    res.json({ ...userData, token});
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Some server error',
+    });
+  }
+};
