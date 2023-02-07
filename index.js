@@ -11,9 +11,7 @@ export const app = express();
 
 mongoose.set('strictQuery', true);
 mongoose
-  .connect(
-    'mongodb+srv://admin:yyyyyy@cluster0.qbtixrj.mongodb.net/CodePen-clone?retryWrites=true&w=majority'
-  )
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log('DB connected successfully'))
   .catch((err) => console.log('DB error', err));
 
@@ -27,7 +25,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3033',
+        url: 'https://rs-clone-api.onrender.com',
       },
     ],
   },
