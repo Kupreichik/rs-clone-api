@@ -104,6 +104,44 @@ router.get('/username/:uniqName', userController.checkUsername);
 
 /**
 * @swagger
+* /users/me:
+*   get:
+*     summary: Returns the data of an authorized user
+*     tags: [Users]
+*     security:
+*       - bearerAuth: []
+*     responses:
+*       200:
+*         description: User authorization confirmed
+*         content:
+*           application/json:
+*             schema:
+*             $ref: '#/components/schemas/User'
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.get('/me', userController.checkAuth, userController.getMe);
+
+/**
+* @swagger
 * /users/register:
 *   post:
 *     summary: Create new user
@@ -194,43 +232,5 @@ router.post('/register', registerValidation, handleValidationErrors, userControl
 *                   example: Failed to login
 */
 router.post('/login', userController.login);
-
-/**
-* @swagger
-* /users/me:
-*   get:
-*     summary: Returns the data of an authorized user
-*     tags: [Users]
-*     security:
-*       - bearerAuth: []
-*     responses:
-*       200:
-*         description: User authorization confirmed
-*         content:
-*           application/json:
-*             schema:
-*             $ref: '#/components/schemas/User'
-*       403:
-*         description: Access token is missing or invalid
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 message:
-*                   type: string
-*                   example: Access token is missing or invalid
-*       500:
-*         description: Some server error
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 message:
-*                   type: string
-*                   example: Some server error
-*/
-router.get('/me', userController.checkAuth, userController.getMe);
 
 export default router;

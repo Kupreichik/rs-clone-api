@@ -4,14 +4,17 @@ import cors from 'cors';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUI from 'swagger-ui-express';
 import usersRouter from './routes/users.js';
+import uploadRouter from './routes/upload.js';
 
 const PORT = process.env.PORT || 3033;
+const DB_URI =
+  'mongodb+srv://admin:yyyyyy@cluster0.qbtixrj.mongodb.net/CodePen-clone?retryWrites=true&w=majority';
 
 export const app = express();
 
 mongoose.set('strictQuery', true);
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(process.env.MONGODB_URI || DB_URI)
   .then(() => console.log('DB connected successfully'))
   .catch((err) => console.log('DB error', err));
 
@@ -37,6 +40,8 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 app.use(express.json());
 app.use(cors());
 app.use('/users', usersRouter);
+app.use('/upload', uploadRouter);
+app.use('/images', express.static('images'));
 
 app.listen(PORT, (err) => {
   if (err) return console.log(err);
