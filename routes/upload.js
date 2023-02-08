@@ -1,23 +1,8 @@
 import express from 'express';
-import fs from 'fs';
-import multer from 'multer';
+import { imgUpload, upload } from '../controllers/uploadController.js';
 import { checkAuth } from '../controllers/userController.js';
 
 const router = express.Router();
-
-const storage = multer.diskStorage({
-  destination: (_, __, cb) => {
-    if (!fs.existsSync('images')) {
-      fs.mkdirSync('images');
-    }
-    cb(null, 'images');
-  },
-  filename: (_, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage });
 
 /**
 * @swagger
@@ -46,7 +31,7 @@ const upload = multer({ storage });
 *               properties:
 *                 url:
 *                   type: string
-*                   example: https://rs-clone-api.onrender.com/images/3825682734981270.jpg
+*                   example: https://rs-clone-api.onrender.com/images/63e3d4e4d2ba97d691114311.jpg
 *       403:
 *         description: Access token is missing or invalid
 *         content:
@@ -68,10 +53,6 @@ const upload = multer({ storage });
 *                   type: string
 *                   example: Failed to upload
 */
-router.post('/', checkAuth, upload.single('image'), (req, res) => {
-  res.json({
-    url: `/images/${req.file.originalname}`,
-  });
-});
+router.post('/', checkAuth, upload.single('image'), imgUpload);
 
 export default router;

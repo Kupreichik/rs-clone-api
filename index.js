@@ -4,9 +4,11 @@ import cors from 'cors';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUI from 'swagger-ui-express';
 import usersRouter from './routes/users.js';
+import pensRouter from './routes/pens.js';
 import uploadRouter from './routes/upload.js';
 
 const PORT = process.env.PORT || 3033;
+export const BASE_URL = 'https://rs-clone-api.onrender.com';
 const DB_URI =
   'mongodb+srv://admin:yyyyyy@cluster0.qbtixrj.mongodb.net/CodePen-clone?retryWrites=true&w=majority';
 
@@ -28,7 +30,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'https://rs-clone-api.onrender.com',
+        url: BASE_URL,
       },
     ],
   },
@@ -40,6 +42,7 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 app.use(express.json());
 app.use(cors());
 app.use('/users', usersRouter);
+app.use('/pens', pensRouter);
 app.use('/upload', uploadRouter);
 app.use('/images', express.static('images'));
 

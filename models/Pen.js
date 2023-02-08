@@ -5,19 +5,11 @@ const PenSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  html: {
-    type: String,
-    required: true,
-  },
-  css: {
-    type: String,
-    required: true,
-  },
-  js: {
-    type: String,
-    required: true,
-  },
-  imageUrl: String,
+
+  html: String,
+  css: String,
+  js: String,
+
   likesCount: {
     type: Number,
     default: 0,
@@ -33,4 +25,4 @@ const PenSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model('Post', PenSchema);
+export default mongoose.model('Pens', PenSchema);

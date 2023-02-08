@@ -33,7 +33,7 @@ const router = express.Router();
 *         name: Bill Gates
 *         username: billy55
 *         email: billy@mail.com
-*         token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJpbGx5NTUiLCJpYXQiOjE2NzU2OTY5MjIsImV4cCI6MTY3ODI4ODkyMn0.CqGPEWCJZYAlkUaMHRcPTn1wRXtdLhRSHi2qiHxr6dI
+*         token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2UzZDRlNGQyYmE5N2Q2OTExMTQzMTEiLCJpYXQiOjE2NzU4NzU1NTYsImV4cCI6MTY3ODQ2NzU1Nn0.Yv_vNg5lb4KiL3oXpQkBShE6Ovu7GfYY3zPexvPPnY4
 *     UserData:
 *       type: object
 *       required:

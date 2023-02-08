@@ -38,7 +38,7 @@ export const register = async (req, res) => {
 
     const token = jwt.sign(
       {
-        username: user.username,
+        _id: user._id,
       },
       'secretCode007',
       {
@@ -80,7 +80,7 @@ export const login = async (req, res) => {
 
     const token = jwt.sign(
       {
-        username: user.username,
+        _id: user._id,
       },
       'secretCode007',
       {
@@ -112,7 +112,7 @@ export const checkAuth = (req, res, next) => {
   if (token) {
     try {
       const decoded = jwt.verify(token, 'secretCode007');
-      req.username = decoded.username;
+      req.userId = decoded._id;
       next();
     } catch (e) {
       return res.status(403).json(accessError);
