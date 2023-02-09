@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { BASE_URL } from '../index.js';
 import UserModel from '../models/User.js';
 
 export const checkUsername = async (req, res) => {
@@ -31,8 +32,9 @@ export const register = async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
+    const avatar = `${BASE_URL}/images/user-default-avatar.webp`;
 
-    const doc = new UserModel({ name, username, email, passwordHash: hash });
+    const doc = new UserModel({ name, username, email, avatar, passwordHash: hash });
 
     const user = await doc.save();
 
@@ -125,7 +127,7 @@ export const checkAuth = (req, res, next) => {
 export const getMe = async (req, res) => {
   try {
     const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
-    const user = await UserModel.findOne({ username: req.username });
+    const user = await UserModel.findOne({ _id: req.userId });
 
     if (!user) {
       return res.status(404).json({

@@ -26,6 +26,9 @@ const router = express.Router();
 *         email:
 *           type: string
 *           description: The uniq user email
+*         avatar:
+*           type: string
+*           description: URL avatar user image
 *         token:
 *           type: string
 *           description: Security token to access
@@ -33,6 +36,7 @@ const router = express.Router();
 *         name: Bill Gates
 *         username: billy55
 *         email: billy@mail.com
+*         avatar: https://rs-clone-api.onrender.com/images/user-default-avatar.jpg
 *         token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2UzZDRlNGQyYmE5N2Q2OTExMTQzMTEiLCJpYXQiOjE2NzU4NzU1NTYsImV4cCI6MTY3ODQ2NzU1Nn0.Yv_vNg5lb4KiL3oXpQkBShE6Ovu7GfYY3zPexvPPnY4
 *     UserData:
 *       type: object
