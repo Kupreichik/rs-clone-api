@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { BASE_URL } from '../index.js';
 import UserModel from '../models/User.js';
 
 export const checkUsername = async (req, res) => {
@@ -31,14 +32,15 @@ export const register = async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
+    const avatar = `${BASE_URL}/images/user-default-avatar.webp`;
 
-    const doc = new UserModel({ name, username, email, passwordHash: hash });
+    const doc = new UserModel({ name, username, email, avatar, passwordHash: hash });
 
     const user = await doc.save();
 
     const token = jwt.sign(
       {
-        username: user.username,
+        _id: user._id,
       },
       'secretCode007',
       {
@@ -80,7 +82,7 @@ export const login = async (req, res) => {
 
     const token = jwt.sign(
       {
-        username: user.username,
+        _id: user._id,
       },
       'secretCode007',
       {
@@ -112,7 +114,7 @@ export const checkAuth = (req, res, next) => {
   if (token) {
     try {
       const decoded = jwt.verify(token, 'secretCode007');
-      req.username = decoded.username;
+      req.userId = decoded._id;
       next();
     } catch (e) {
       return res.status(403).json(accessError);
@@ -125,7 +127,7 @@ export const checkAuth = (req, res, next) => {
 export const getMe = async (req, res) => {
   try {
     const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
-    const user = await UserModel.findOne({ username: req.username });
+    const user = await UserModel.findOne({ _id: req.userId });
 
     if (!user) {
       return res.status(404).json({
