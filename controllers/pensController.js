@@ -50,3 +50,41 @@ export const getAll = async (req, res) => {
     res.status(500).json(serverError);
   }
 };
+
+export const getOne = async (req, res) => {
+  try {
+    PenModel.findOneAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      {
+        $inc: { viewsCount: 1 },
+      },
+      {
+        returnDocument: 'after',
+      },
+      (err, doc) => {
+        if (err) {
+          console.log(err);
+          return res.status(404).json({
+            message: 'Pen not found',
+          });
+        }
+
+        res.json(doc);
+      }
+    )
+      .populate({
+        path: 'user',
+        select: {
+          name: 1,
+          username: 1,
+          avatar: 1,
+          _id: 0,
+        },
+      });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(serverError);
+  }
+};

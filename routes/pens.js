@@ -108,7 +108,7 @@ const router = express.Router();
 *         example: 4
 *     responses:
 *       200:
-*         description: Pen was successfully created
+*         description: Success response
 *         content:
 *           application/json:
 *             schema:
@@ -134,6 +134,51 @@ const router = express.Router();
 *                   example: Some server error
 */
 router.get('/', pensController.getAll);
+
+/**
+* @swagger
+* /pens/{id}:
+*   get:
+*     summary: Returns json one pen data by id
+*     tags: [Pens]
+*     parameters:
+*       - id: _limit
+*         in: path
+*         description: Pen id
+*         required: true
+*         schema:
+*           type: string
+*         example: 63e4d9af9e4d3c6019306b3f
+*     responses:
+*       200:
+*         description: Success response
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               $ref: '#/components/schemas/PenData'
+*       404:
+*         description: Pen not found
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Pen not found
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.get('/:id', pensController.getOne);
 
 /**
 * @swagger
