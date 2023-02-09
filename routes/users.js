@@ -37,7 +37,7 @@ const router = express.Router();
 *         username: billy55
 *         email: billy@mail.com
 *         avatar: https://rs-clone-api.onrender.com/images/user-default-avatar.jpg
-*         token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2UzZDRlNGQyYmE5N2Q2OTExMTQzMTEiLCJpYXQiOjE2NzU4NzU1NTYsImV4cCI6MTY3ODQ2NzU1Nn0.Yv_vNg5lb4KiL3oXpQkBShE6Ovu7GfYY3zPexvPPnY4
+*         token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2U0OWVlYmVlN2QzOGU4N2Q0ODA4NmQiLCJpYXQiOjE2NzU5MjcyNzUsImV4cCI6MTY3ODUxOTI3NX0.slQMOe6DwiOUWcBQvl9cPygBbhYcMSoOFotSiatg2Ws
 *     UserData:
 *       type: object
 *       required:

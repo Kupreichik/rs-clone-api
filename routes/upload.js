@@ -29,7 +29,7 @@ const router = express.Router();
 *             schema:
 *               type: object
 *               properties:
-*                 url:
+*                 avatar:
 *                   type: string
 *                   example: https://rs-clone-api.onrender.com/images/63e3d4e4d2ba97d691114311.jpg
 *       403:
