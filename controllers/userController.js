@@ -147,3 +147,17 @@ export const getMe = async (req, res) => {
     });
   }
 };
+
+export const logout = async (req, res) => {
+  try {
+    res.clearCookie('cp-access').json({
+      message: 'Logout successful',
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Some server error',
+    });
+  }
+}

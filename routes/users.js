@@ -225,4 +225,34 @@ router.post('/register', registerValidation, handleValidationErrors, userControl
 */
 router.post('/login', userController.login);
 
+/**
+* @swagger
+* /users/logout:
+*   patch:
+*     summary: Remove access cookie at the client for user logout
+*     tags: [Users]
+*     responses:
+*       200:
+*         description: Logout successful
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Logout successful
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.patch('/logout', userController.logout);
+
 export default router;
