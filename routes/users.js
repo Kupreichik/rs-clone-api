@@ -15,7 +15,7 @@ const router = express.Router();
 *         - name
 *         - username
 *         - email
-*         - token
+*         - avatar
 *       properties:
 *         name:
 *           type: string
@@ -29,15 +29,11 @@ const router = express.Router();
 *         avatar:
 *           type: string
 *           description: URL avatar user image
-*         token:
-*           type: string
-*           description: Security token to access
 *       example:
 *         name: Bill Gates
 *         username: billy55
 *         email: billy@mail.com
 *         avatar: https://rs-clone-api.onrender.com/images/user-default-avatar.jpg
-*         token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2U0OWVlYmVlN2QzOGU4N2Q0ODA4NmQiLCJpYXQiOjE2NzU5MjcyNzUsImV4cCI6MTY3ODUxOTI3NX0.slQMOe6DwiOUWcBQvl9cPygBbhYcMSoOFotSiatg2Ws
 *     UserData:
 *       type: object
 *       required:
@@ -63,11 +59,6 @@ const router = express.Router();
 *         username: billy55
 *         email: billy@mail.com
 *         password: qwerty
-*   securitySchemes:
-*     bearerAuth:
-*       type: http
-*       scheme: bearer
-*       bearerFormat: JWT
 */
 /**
 * @swagger
@@ -103,7 +94,6 @@ const router = express.Router();
 *       500:
 *         description: Some server error
 */
-
 router.get('/username/:uniqName', userController.checkUsername);
 
 /**
@@ -112,8 +102,6 @@ router.get('/username/:uniqName', userController.checkUsername);
 *   get:
 *     summary: Returns the data of an authorized user
 *     tags: [Users]
-*     security:
-*       - bearerAuth: []
 *     responses:
 *       200:
 *         description: User authorization confirmed

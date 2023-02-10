@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUI from 'swagger-ui-express';
+import cookieParser from 'cookie-parser';
 import usersRouter from './routes/users.js';
 import pensRouter from './routes/pens.js';
 import uploadRouter from './routes/upload.js';
@@ -41,6 +42,8 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
+
 app.use('/users', usersRouter);
 app.use('/pens', pensRouter);
 app.use('/upload', uploadRouter);

@@ -50,10 +50,11 @@ export const register = async (req, res) => {
 
     const { passwordHash, _id, __v, ...userData } = user._doc;
 
-    res.json({
-      ...userData,
-      token,
-    });
+    res
+      .cookie('cp-access', token, {
+        httpOnly: true,
+      })
+      .json(userData);
 
   } catch (err) {
     console.log(err);
@@ -92,10 +93,11 @@ export const login = async (req, res) => {
 
     const { passwordHash, _id, __v, ...userData } = user._doc;
 
-    res.json({
-      ...userData,
-      token,
-    });
+    res
+      .cookie('cp-access', token, {
+        httpOnly: true,
+      })
+      .json(userData);
 
   } catch (err) {
     console.log(err);
@@ -109,7 +111,8 @@ export const checkAuth = (req, res, next) => {
   const accessError = {
     message: 'Access token is missing or invalid',
   };
-  const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
+
+  const token = req.cookies['cp-access'];
 
   if (token) {
     try {
@@ -126,7 +129,6 @@ export const checkAuth = (req, res, next) => {
 
 export const getMe = async (req, res) => {
   try {
-    const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
     const user = await UserModel.findOne({ _id: req.userId });
 
     if (!user) {
@@ -137,7 +139,7 @@ export const getMe = async (req, res) => {
 
     const { passwordHash, _id, __v, ...userData } = user._doc;
 
-    res.json({ ...userData, token});
+    res.json(userData);
   } catch (err) {
     console.log(err);
     res.status(500).json({
