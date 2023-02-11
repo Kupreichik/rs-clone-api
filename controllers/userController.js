@@ -192,9 +192,11 @@ export const githubAuth = async (req, res) => {
     
     if (!user) {
       const doc = new UserModel({
-        name: gitHubUser.name,
+        name: gitHubUser.name || '  ',
         username: gitHubUser.login,
-        avatar: gitHubUser.avatar_url,
+        avatar:
+          gitHubUser.avatar_url ||
+          `${BASE_URL}/images/user-default-avatar.webp`,
       });
 
       user = await doc.save();
