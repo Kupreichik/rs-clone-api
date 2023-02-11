@@ -41,7 +41,13 @@ export const register = async (req, res) => {
     const hash = await bcrypt.hash(password, salt);
     const avatar = `${BASE_URL}/images/user-default-avatar.webp`;
 
-    const doc = new UserModel({ name, username, email, avatar, passwordHash: hash });
+    const doc = new UserModel({
+      name,
+      username,
+      email: req.body.email,
+      avatar,
+      passwordHash: hash,
+    });
 
     const user = await doc.save();
 
