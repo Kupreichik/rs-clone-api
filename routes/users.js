@@ -14,7 +14,6 @@ const router = express.Router();
 *       required:
 *         - name
 *         - username
-*         - email
 *         - avatar
 *       properties:
 *         name:
@@ -23,16 +22,12 @@ const router = express.Router();
 *         username:
 *           type: string
 *           description: The uniq login username
-*         email:
-*           type: string
-*           description: The uniq user email
 *         avatar:
 *           type: string
 *           description: URL avatar user image
 *       example:
 *         name: Bill Gates
 *         username: billy55
-*         email: billy@mail.com
 *         avatar: https://rs-clone-api.onrender.com/images/user-default-avatar.jpg
 *     UserData:
 *       type: object
@@ -254,5 +249,7 @@ router.post('/login', userController.login);
 *                   example: Some server error
 */
 router.patch('/logout', userController.logout);
+
+router.get('/github-auth', userController.githubAuth);
 
 export default router;
