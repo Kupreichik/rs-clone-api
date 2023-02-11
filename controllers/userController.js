@@ -28,9 +28,9 @@ export const checkUsername = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
-    const { name, username, _email, password } = req.body;
+    const { name, username, password } = req.body;
 
-    const usedEmail = await UserModel.findOne({ email: _email });
+    const usedEmail = await UserModel.findOne({ email: req.body.email });
     if (usedEmail) {
       return res.status(403).json({
         message: 'User with this email is already registered',
@@ -41,7 +41,7 @@ export const register = async (req, res) => {
     const hash = await bcrypt.hash(password, salt);
     const avatar = `${BASE_URL}/images/user-default-avatar.webp`;
 
-    const doc = new UserModel({ name, username, email: _email, avatar, passwordHash: hash });
+    const doc = new UserModel({ name, username, email, avatar, passwordHash: hash });
 
     const user = await doc.save();
 
