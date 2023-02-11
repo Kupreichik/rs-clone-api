@@ -179,7 +179,8 @@ const getGitHubUser = async ({ code }) => {
     })
     .then((res) => res.data)
     .catch((err) => {
-      console.log(`Error getting user from GitHub  `, err.message);
+      console.log(`Error getting user from GitHub  `, err);
+      throw(err);
     });
 }
 
@@ -200,6 +201,7 @@ export const githubAuth = async (req, res) => {
       const doc = new UserModel({
         name: gitHubUser.name || '  ',
         username: gitHubUser.login,
+        email: gitHubUser.email || gitHubUser.id,
         avatar:
           gitHubUser.avatar_url ||
           `${BASE_URL}/images/user-default-avatar.webp`,
