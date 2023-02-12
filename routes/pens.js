@@ -91,6 +91,71 @@ const router = express.Router();
 *   name: Pens
 *   description: The pens publishing managing API
 */
+
+/**
+* @swagger
+* /pens:
+*   post:
+*     summary: Create new pen
+*     tags: [Pens]
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               title:
+*                 type: string
+*                 description: Title of pen
+*               html:
+*                 type: string
+*                 description: HTML code
+*               css:
+*                 type: string
+*                 description: CSS code
+*               js:
+*                 type: string
+*                 description: JavaScript code
+*     responses:
+*       200:
+*         description: Pen was successfully created
+*         content:
+*           application/json:
+*             schema:
+*             $ref: '#/components/schemas/Pen'
+*       400:
+*         description: Bad request
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               example:
+*                 msg: CSS must be sent
+*                 param: css
+*                 location: body
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.post('/', checkAuth, penCreateValidation, handleValidationErrors, pensController.create);
 /**
 * @swagger
 * /pens:
@@ -180,69 +245,5 @@ router.get('/', pensController.getAll);
 */
 router.get('/:id', pensController.getOne);
 
-/**
-* @swagger
-* /pens:
-*   post:
-*     summary: Create new pen
-*     tags: [Pens]
-*     requestBody:
-*       required: true
-*       content:
-*         application/json:
-*           schema:
-*             type: object
-*             properties:
-*               title:
-*                 type: string
-*                 description: Title of pen
-*               html:
-*                 type: string
-*                 description: HTML code
-*               css:
-*                 type: string
-*                 description: CSS code
-*               js:
-*                 type: string
-*                 description: JavaScript code
-*     responses:
-*       200:
-*         description: Pen was successfully created
-*         content:
-*           application/json:
-*             schema:
-*             $ref: '#/components/schemas/Pen'
-*       400:
-*         description: Bad request
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               example:
-*                 msg: CSS must be sent
-*                 param: css
-*                 location: body
-*       403:
-*         description: Access token is missing or invalid
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 message:
-*                   type: string
-*                   example: Access token is missing or invalid
-*       500:
-*         description: Some server error
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 message:
-*                   type: string
-*                   example: Some server error
-*/
-router.post('/', checkAuth, penCreateValidation, handleValidationErrors, pensController.create);
 
 export default router;

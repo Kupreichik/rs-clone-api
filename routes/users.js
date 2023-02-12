@@ -14,8 +14,7 @@ const router = express.Router();
 *       required:
 *         - name
 *         - username
-*         - email
-*         - token
+*         - avatar
 *       properties:
 *         name:
 *           type: string
@@ -23,21 +22,13 @@ const router = express.Router();
 *         username:
 *           type: string
 *           description: The uniq login username
-*         email:
-*           type: string
-*           description: The uniq user email
 *         avatar:
 *           type: string
 *           description: URL avatar user image
-*         token:
-*           type: string
-*           description: Security token to access
 *       example:
 *         name: Bill Gates
 *         username: billy55
-*         email: billy@mail.com
 *         avatar: https://rs-clone-api.onrender.com/images/user-default-avatar.jpg
-*         token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2U0OWVlYmVlN2QzOGU4N2Q0ODA4NmQiLCJpYXQiOjE2NzU5MjcyNzUsImV4cCI6MTY3ODUxOTI3NX0.slQMOe6DwiOUWcBQvl9cPygBbhYcMSoOFotSiatg2Ws
 *     UserData:
 *       type: object
 *       required:
@@ -63,11 +54,6 @@ const router = express.Router();
 *         username: billy55
 *         email: billy@mail.com
 *         password: qwerty
-*   securitySchemes:
-*     bearerAuth:
-*       type: http
-*       scheme: bearer
-*       bearerFormat: JWT
 */
 /**
 * @swagger
@@ -103,7 +89,6 @@ const router = express.Router();
 *       500:
 *         description: Some server error
 */
-
 router.get('/username/:uniqName', userController.checkUsername);
 
 /**
@@ -112,8 +97,6 @@ router.get('/username/:uniqName', userController.checkUsername);
 *   get:
 *     summary: Returns the data of an authorized user
 *     tags: [Users]
-*     security:
-*       - bearerAuth: []
 *     responses:
 *       200:
 *         description: User authorization confirmed
@@ -236,5 +219,37 @@ router.post('/register', registerValidation, handleValidationErrors, userControl
 *                   example: Failed to login
 */
 router.post('/login', userController.login);
+
+/**
+* @swagger
+* /users/logout:
+*   patch:
+*     summary: Remove access cookie at the client for user logout
+*     tags: [Users]
+*     responses:
+*       200:
+*         description: Logout successful
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Logout successful
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.patch('/logout', userController.logout);
+
+router.get('/github-auth', userController.githubAuth);
 
 export default router;
