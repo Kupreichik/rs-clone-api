@@ -88,3 +88,73 @@ export const getOne = async (req, res) => {
     res.status(500).json(serverError);
   }
 };
+
+export const update = async (req, res) => {
+  try {
+    PenModel.findOneAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      {
+        title: req.body.title,
+        html: req.body.html,
+        css: req.body.css,
+        js: req.body.js,
+      },
+      {
+        returnDocument: 'after',
+      },
+      (err, doc) => {
+        if (err) {
+          console.log(err);
+          return res.status(404).json({
+            message: 'Pen not found',
+          });
+        }
+
+        res.json(doc);
+      }
+    ).populate({
+      path: 'user',
+      select: {
+        name: 1,
+        username: 1,
+        avatar: 1,
+        _id: 0,
+      },
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(serverError);
+  }
+};
+
+export const remove = async (req, res) => {
+  try {
+    PenModel.findOneAndDelete(
+      {
+        _id: req.params.id,
+      },
+      (err, doc) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json(serverError);
+        }
+
+        if (!doc) {
+          return res.status(404).json({
+            message: 'Pen not found',
+          });
+        }
+
+        res.json({
+          success: true,
+        });
+      }
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(serverError);
+  }
+};
