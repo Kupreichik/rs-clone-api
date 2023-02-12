@@ -217,3 +217,45 @@ export const addInLoved = async (req, res) => {
     res.status(500).json(serverError);
   }
 };
+
+export const getMy = async (req, res) => {
+  try {
+    const data = await PenModel.find({ user: req.userId })
+      .populate({
+        path: 'user',
+        select: {
+          name: 1,
+          username: 1,
+          avatar: 1,
+          _id: 0,
+        },
+      })
+      .exec();
+
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(serverError);
+  }
+}
+
+export const getLoved = async (req, res) => {
+  try {
+    const { loved } = await UserModel.findOne({ _id: req.userId });
+    const data = await PenModel.find({ _id: [...loved] })
+        .populate({
+          path: 'user',
+          select: {
+            name: 1,
+            username: 1,
+            avatar: 1,
+            _id: 0,
+          },
+        })
+
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(serverError);
+  }
+};

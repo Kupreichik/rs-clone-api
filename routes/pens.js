@@ -137,7 +137,7 @@ router.get('/', pensController.getAll);
 
 /**
 * @swagger
-* /pens/{id}:
+* /pens/one/{id}:
 *   get:
 *     summary: Returns json one pen data by id
 *     tags: [Pens]
@@ -178,7 +178,85 @@ router.get('/', pensController.getAll);
 *                   type: string
 *                   example: Some server error
 */
-router.get('/:id', pensController.getOne);
+router.get('/one/:id', pensController.getOne);
+
+/**
+* @swagger
+* /pens/my:
+*   get:
+*     summary: Returns owned user json pens data
+*     tags: [Pens]
+*     responses:
+*       200:
+*         description: Success response
+*         content:
+*           application/json:
+*             schema:
+*               type: array
+*               items:
+*                 type: object
+*                 $ref: '#/components/schemas/PenData'
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.get('/my', checkAuth, pensController.getMy);
+
+/**
+* @swagger
+* /pens/loved:
+*   get:
+*     summary: Returns loved user json pens data
+*     tags: [Pens]
+*     responses:
+*       200:
+*         description: Success response
+*         content:
+*           application/json:
+*             schema:
+*               type: array
+*               items:
+*                 type: object
+*                 $ref: '#/components/schemas/PenData'
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.get('/loved', checkAuth, pensController.getLoved);
 
 /**
 * @swagger
