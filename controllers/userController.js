@@ -154,6 +154,7 @@ export const logout = async (req, res) => {
     res
       .cookie(COOKIE_NAME, '', {
         httpOnly: true,
+        expires: false,
         maxAge: -1,
         sameSite: 'none',
         secure: true,
