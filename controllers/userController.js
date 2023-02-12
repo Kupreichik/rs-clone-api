@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import querystring from 'querystring';
 import pkg from 'lodash';
 import axios from 'axios';
-import { BASE_URL } from '../index.js';
+import { BASE_URL, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '../index.js';
 import UserModel from '../models/User.js';
 
 const { get } = pkg;
@@ -183,11 +183,6 @@ const getGitHubUser = async ({ code }) => {
       throw(err);
     });
 }
-
-const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || 'c7a99918604b2ae5c655';
-const GITHUB_CLIENT_SECRET =
-  process.env.GITHUB_CLIENT_SECRET ||
-  '938c95a649e2c73272dca40ae5d72af72b186c88';
 
 export const githubAuth = async (req, res) => {
   try {

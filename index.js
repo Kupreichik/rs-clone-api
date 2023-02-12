@@ -10,14 +10,14 @@ import uploadRouter from './routes/upload.js';
 
 const PORT = process.env.PORT || 3033;
 export const BASE_URL = 'https://rs-clone-api.onrender.com';
-const DB_URI =
-  'mongodb+srv://admin:yyyyyy@cluster0.qbtixrj.mongodb.net/CodePen-clone?retryWrites=true&w=majority';
+export const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
+export const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET
 
 export const app = express();
 
 mongoose.set('strictQuery', true);
 mongoose
-  .connect(process.env.MONGODB_URI || DB_URI)
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log('DB connected successfully'))
   .catch((err) => console.log('DB error', err));
 
