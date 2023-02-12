@@ -248,6 +248,51 @@ router.post('/', checkAuth, penCreateValidation, handleValidationErrors, pensCon
 /**
 * @swagger
 * /pens/{id}:
+*   patch:
+*     summary: Add pen in loved
+*     tags: [Pens]
+*     parameters:
+*       - name: id
+*         in: path
+*         description: Pen id
+*         required: true
+*         schema:
+*           type: string
+*         example: 63e4d9af9e4d3c6019306b3f
+*     requestBody:
+*     responses:
+*       200:
+*         description: Pen was successfully updated
+*         content:
+*           application/json:
+*             schema:
+*             $ref: '#/components/schemas/PenData'
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.patch('/:id', checkAuth, pensController.addInLoved);
+
+/**
+* @swagger
+* /pens/{id}:
 *   put:
 *     summary: Update pen
 *     tags: [Pens]

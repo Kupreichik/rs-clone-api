@@ -22,12 +22,16 @@ const router = express.Router();
 *         username:
 *           type: string
 *           description: The uniq login username
+*         loved:
+*           type: Array
+*           description: Array with id of loved pens
 *         avatar:
 *           type: string
 *           description: URL avatar user image
 *       example:
 *         name: Bill Gates
 *         username: billy55
+*         loved: ["63e4d9af9e4d3c6019306b3f"]
 *         avatar: https://rs-clone-api.onrender.com/images/user-default-avatar.jpg
 *     UserData:
 *       type: object

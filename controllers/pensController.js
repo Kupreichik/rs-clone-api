@@ -1,4 +1,5 @@
-import PenModel from '../models/Pen.js'
+import PenModel from '../models/Pen.js';
+import UserModel from '../models/User.js';
 
 const serverError = {
       message: 'Some server error',
@@ -153,6 +154,64 @@ export const remove = async (req, res) => {
         });
       }
     );
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(serverError);
+  }
+};
+
+export const addInLoved = async (req, res) => {
+  try {
+    const { loved } = await UserModel.findOne({ _id: req.userId });
+    const index = loved.indexOf(req.params.id);
+    let inc;
+
+    if (index === -1) {
+
+      inc = 1;
+      loved.push(req.params.id);
+      UserModel.findOneAndUpdate({ _id: req.userId }, { loved },
+        (err) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).json(serverError);
+          }
+        }
+      );
+
+    } else {
+
+      inc = -1;
+      loved.splice(index, 1);
+      UserModel.findOneAndUpdate({ _id: req.userId }, { loved }, (err) => {
+        if (err) {
+        console.log(err);
+        return res.status(500).json(serverError);
+        }
+      });
+    }
+
+    PenModel.findOneAndUpdate(
+      { _id: req.params.id },
+      { $inc: { likesCount: inc } },
+      { returnDocument: 'after' },
+      (err, doc) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json(serverError);
+        }
+        res.json(doc);
+      }
+    ).populate({
+      path: 'user',
+      select: {
+        name: 1,
+        username: 1,
+        avatar: 1,
+        _id: 0,
+      },
+    });
+
   } catch (err) {
     console.log(err);
     res.status(500).json(serverError);
