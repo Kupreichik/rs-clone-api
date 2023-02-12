@@ -58,6 +58,8 @@ export const register = async (req, res) => {
     res
       .cookie(COOKIE_NAME, token, {
         httpOnly: true,
+        sameSite: 'none',
+        secure: true,
       })
       .json(userData);
 
@@ -93,6 +95,8 @@ export const login = async (req, res) => {
     res
       .cookie(COOKIE_NAME, token, {
         httpOnly: true,
+        sameSite: 'none',
+        secure: true,
       })
       .json(userData);
 
@@ -208,8 +212,10 @@ export const githubAuth = async (req, res) => {
     const token = getToken(user);
 
     res.cookie(COOKIE_NAME, token, {
-        httpOnly: true,
-      });
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
     res.redirect(`http://localhost:3000${path}`);
 
   } catch (err) {
