@@ -151,9 +151,16 @@ export const getMe = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    res.clearCookie(COOKIE_NAME).json({
-      message: 'Logout successful',
-    });
+    res
+      .cookie(COOKIE_NAME, '', {
+        httpOnly: true,
+        maxAge: -1,
+        sameSite: 'none',
+        secure: true,
+      })
+      .json({
+        message: 'Logout successful',
+      });
 
   } catch (err) {
     console.log(err);
