@@ -17,6 +17,10 @@ const UserSchema = mongoose.Schema({
   passwordHash: {
     type: String,
   },
+  loved: {
+    type: Array,
+    default: [],
+  },
   avatar: String,
 });
 
