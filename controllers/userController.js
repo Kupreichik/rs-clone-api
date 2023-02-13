@@ -223,6 +223,7 @@ export const githubAuth = async (req, res) => {
     const token = getToken(user);
 
     res.cookie(COOKIE_NAME, token, {
+      maxAge: TOKEN_EXPIRATION_DAYS * 24 * 60 * 60000,
       httpOnly: true,
       sameSite: 'none',
       secure: true,
