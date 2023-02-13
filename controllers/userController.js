@@ -9,6 +9,7 @@ import UserModel from '../models/User.js';
 const { get } = pkg;
 const secret = 'secretCode007';
 const COOKIE_NAME = 'cp-access';
+const TOKEN_EXPIRATION_DAYS = 7;
 
 export const checkUsername = async (req, res) => {
   try {
@@ -57,6 +58,7 @@ export const register = async (req, res) => {
 
     res
       .cookie(COOKIE_NAME, token, {
+        maxAge: (TOKEN_EXPIRATION_DAYS * 24 * 60 * 60000),
         httpOnly: true,
         sameSite: 'none',
         secure: true,
@@ -94,6 +96,7 @@ export const login = async (req, res) => {
 
     res
       .cookie(COOKIE_NAME, token, {
+        maxAge: TOKEN_EXPIRATION_DAYS * 24 * 60 * 60000,
         httpOnly: true,
         sameSite: 'none',
         secure: true,
