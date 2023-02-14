@@ -133,6 +133,52 @@ router.get('/me', userController.checkAuth, userController.getMe);
 
 /**
 * @swagger
+* /users/me:
+*   patch:
+*     summary: Update name of user
+*     tags: [Users]
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               name:
+*                 type: string
+*                 example: New Name
+*     responses:
+*       200:
+*         description: User data was successfully updated 
+*         content:
+*           application/json:
+*             schema:
+*             $ref: '#/components/schemas/User'
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.patch('/me', userController.checkAuth, userController.changeName);
+
+/**
+* @swagger
 * /users/register:
 *   post:
 *     summary: Create new user

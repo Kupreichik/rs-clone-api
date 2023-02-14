@@ -209,7 +209,7 @@ export const githubAuth = async (req, res) => {
     
     if (!user) {
       const doc = new UserModel({
-        name: gitHubUser.name || '  ',
+        name: gitHubUser.name || ' ',
         username: gitHubUser.login,
         email: gitHubUser.email || gitHubUser.id,
         avatar:
@@ -234,6 +234,39 @@ export const githubAuth = async (req, res) => {
     console.log(err.message);
   }
 };
+
+export const changeName = async (req, res) => {
+  try {
+    const { name } = req.body;
+    UserModel.findOneAndUpdate(
+      {
+        _id: req.userId,
+      },
+      {
+        name,
+      },
+      {
+        returnDocument: 'after',
+      },
+      (err, doc) => {
+        if (err) {
+          console.log(err);
+          return res.status(404).json({
+            message: 'Pen not found',
+          });
+        }
+        const { email, passwordHash, _id, __v, ...userData } = doc._doc;
+        res.json(userData);
+      }
+    );
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Some server error',
+    });
+  }
+}
 
 const getToken = ({ _id }) => {
   return jwt.sign(

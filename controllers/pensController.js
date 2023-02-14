@@ -7,11 +7,12 @@ const serverError = {
 
 export const create = async (req, res) => {
   try {
+    const { title, html, css, js, } = req.body;
     const doc = new PenModel({
-      title: req.body.title,
-      html: req.body.html,
-      css: req.body.css,
-      js: req.body.js,
+      title,
+      html,
+      css,
+      js,
       user: req.userId,
     });
 
@@ -92,15 +93,13 @@ export const getOne = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
+    const { title, html, css, js } = req.body;
     PenModel.findOneAndUpdate(
       {
         _id: req.params.id,
       },
       {
-        title: req.body.title,
-        html: req.body.html,
-        css: req.body.css,
-        js: req.body.js,
+        title, html, css, js
       },
       {
         returnDocument: 'after',
