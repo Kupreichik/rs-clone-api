@@ -29,7 +29,7 @@ export const create = async (req, res) => {
 
 export const getAll = async (req, res) => {
     try {
-      const limit = req.query._limit || 10;
+      const limit = req.query._limit || undefined;
       const data = await PenModel.find()
         .limit(limit)
         .populate({

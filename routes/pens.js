@@ -100,7 +100,7 @@ const router = express.Router();
 *     parameters:
 *       - name: _limit
 *         in: query
-*         description: Count of getting pens (default value is 10)
+*         description: Count of getting pens (returns all pens by default)
 *         required: false
 *         schema:
 *           type: integer
