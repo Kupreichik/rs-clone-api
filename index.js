@@ -9,7 +9,7 @@ import pensRouter from './routes/pens.js';
 import uploadRouter from './routes/upload.js';
 
 const PORT = process.env.PORT || 3033;
-export const BASE_URL = 'https://rs-clone-api.onrender.com';
+export const BASE_URL = 'http://localhost:3033';
 export const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 export const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET
 
