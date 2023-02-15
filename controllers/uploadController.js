@@ -57,9 +57,9 @@ export const imgUpload = async (req, res) => {
           return res.json({ avatar: url });
         }
       });
+    } else {
+      res.json({ avatar: url });
     }
-
-    res.json({ avatar: url });
   } catch (err) {
     res.status(500).json({
       message: 'Some server error',
