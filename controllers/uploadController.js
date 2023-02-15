@@ -27,7 +27,7 @@ export const imgUpload = async (req, res) => {
   const url = `${BASE_URL}/images/${req.file.originalname}`;
   const { avatar } = await UserModel.findOne({ _id: req.userId });
 
-  UserModel.findOneAndUpdate(
+  await UserModel.findOneAndUpdate(
     {
       _id: req.userId,
     },
@@ -48,9 +48,13 @@ export const imgUpload = async (req, res) => {
     const file = avatar.replace(`${BASE_URL}/`, '');
 
     fs.unlink(file, (err) => {
-      if (err) return res.status(500).json({
+      if (err) {
+        return res.status(500).json({
           message: 'Some server error',
         });
+      } else {
+        return res.json({ avatar: url });
+      }
     });
   }
 
