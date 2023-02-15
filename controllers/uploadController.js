@@ -27,10 +27,9 @@ export const imgUpload = async (req, res) => {
   const url = `${BASE_URL}/images/${req.file.originalname}`;
   try {
     const { avatar } = await UserModel.findOne({ _id: req.userId });
+    const file = avatar.replace(`${BASE_URL}/`, '');
 
     if (avatar !== defaultUrl) {
-      const file = avatar.replace(`${BASE_URL}/`, '');
-
       fs.unlink(file, (err) => {
         if (err) console.log('failed to delete file ', err.message);
       });
@@ -65,10 +64,9 @@ export const imgRemove = async (req, res) => {
   const defaultUrl = `${BASE_URL}/images/user-default-avatar.webp`;
   try {
     const { avatar } = await UserModel.findOne({ _id: req.userId });
+    const file = avatar.replace(`${BASE_URL}/`, '');
 
     if (avatar === defaultUrl) return res.json({ avatar });
-
-    const file = avatar.replace(`${BASE_URL}/`, '');
 
     fs.unlink(file, (err) => {
       if (err) return res.status(500).json({
