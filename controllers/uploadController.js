@@ -20,39 +20,46 @@ const storage = multer.diskStorage({
   },
 });
 
-export const upload = multer({ storage });
+export const upload = multer({ storage }).single('image');
 
 export const imgUpload = async (req, res) => {
-  const defaultUrl = `${BASE_URL}/images/user-default-avatar.webp`;
-  const url = `${BASE_URL}/images/${req.file.originalname}`;
   try {
-    const { avatar } = await UserModel.findOne({ _id: req.userId });
-    const file = avatar.replace(`${BASE_URL}/`, '');
-
-    if (avatar !== defaultUrl) {
-      fs.unlink(file, (err) => {
-        if (err) console.log('failed to delete file ', err.message);
+    upload(req, res, async (err) => {
+      if (err) return res.status(500).json({
+        message: 'Server error while writing file',
       });
-    }
 
-    UserModel.findOneAndUpdate(
-      {
-        _id: req.userId,
-      },
-      {
-        avatar: url,
-      },
-      (err) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).json({
-            message: 'Some server error',
-          });
-        } else {
-          res.json({ avatar: url });
-        }
+      const defaultUrl = `${BASE_URL}/images/user-default-avatar.webp`;
+      const url = `${BASE_URL}/images/${req.file.originalname}`;
+
+      const { avatar } = await UserModel.findOne({ _id: req.userId });
+      const file = avatar.replace(`${BASE_URL}/`, '');
+
+      if (avatar !== defaultUrl) {
+        fs.unlink(file, (err) => {
+          if (err) console.log('failed to delete file ', err.message);
+        });
       }
-    );
+
+      UserModel.findOneAndUpdate(
+        {
+          _id: req.userId,
+        },
+        {
+          avatar: url,
+        },
+        (err) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).json({
+              message: 'Some server error',
+            });
+          } else {
+            res.json({ avatar: url });
+          }
+        }
+      );
+    });
   } catch (err) {
     res.status(500).json({
       message: 'Some server error',

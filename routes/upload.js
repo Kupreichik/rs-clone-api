@@ -1,5 +1,5 @@
 import express from 'express';
-import { imgRemove, imgUpload, upload } from '../controllers/uploadController.js';
+import { imgRemove, imgUpload } from '../controllers/uploadController.js';
 import { checkAuth } from '../controllers/userController.js';
 
 const router = express.Router();
@@ -53,7 +53,7 @@ const router = express.Router();
 *                   type: string
 *                   example: Failed to upload
 */
-router.post('/', checkAuth, upload.single('image'), imgUpload);
+router.post('/', checkAuth, imgUpload);
 
 /**
 * @swagger
