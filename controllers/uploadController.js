@@ -1,7 +1,10 @@
 import fs from 'fs';
 import multer from 'multer';
+import { nanoid } from 'nanoid';
 import { BASE_URL } from '../index.js';
 import UserModel from '../models/User.js';
+
+const imgIdLength = 8;
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
@@ -10,17 +13,19 @@ const storage = multer.diskStorage({
     }
     cb(null, 'images');
   },
-  filename: (req, file, cb) => {
+  filename: (_, file, cb) => {
     const extension = file.mimetype.split('/')[1];
-    file.originalname = `${req.userId}.${extension}`;
+    file.originalname = `${nanoid(imgIdLength)}.${extension}`;
     cb(null, file.originalname);
   },
 });
 
 export const upload = multer({ storage });
 
-export const imgUpload = (req, res) => {
+export const imgUpload = async (req, res) => {
+  const defaultUrl = `${BASE_URL}/images/user-default-avatar.webp`;
   const url = `${BASE_URL}/images/${req.file.originalname}`;
+  const { avatar } = await UserModel.findOne({ _id: req.userId });
 
   UserModel.findOneAndUpdate(
     {
@@ -38,6 +43,16 @@ export const imgUpload = (req, res) => {
       }
     }
   );
+
+  if (avatar !== defaultUrl) {
+    const file = avatar.replace(`${BASE_URL}/`, '');
+
+    fs.unlink(file, (err) => {
+      if (err) return res.status(500).json({
+          message: 'Some server error',
+        });
+    });
+  }
 
   res.json({ avatar: url });
 };
