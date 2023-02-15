@@ -28,6 +28,14 @@ export const imgUpload = async (req, res) => {
   try {
     const { avatar } = await UserModel.findOne({ _id: req.userId });
 
+    if (avatar !== defaultUrl) {
+      const file = avatar.replace(`${BASE_URL}/`, '');
+
+      fs.unlink(file, (err) => {
+        if (err) console.log('failed to delete file ', err.message);
+      });
+    }
+
     UserModel.findOneAndUpdate(
       {
         _id: req.userId,
@@ -41,25 +49,11 @@ export const imgUpload = async (req, res) => {
           return res.status(500).json({
             message: 'Some server error',
           });
+        } else {
+          res.json({ avatar: url });
         }
       }
     );
-
-    if (avatar !== defaultUrl) {
-      const file = avatar.replace(`${BASE_URL}/`, '');
-
-      fs.unlink(file, (err) => {
-        if (err) {
-          return res.status(500).json({
-            message: 'Some server error',
-          });
-        } else {
-          return res.json({ avatar: url });
-        }
-      });
-    } else {
-      res.json({ avatar: url });
-    }
   } catch (err) {
     res.status(500).json({
       message: 'Some server error',
