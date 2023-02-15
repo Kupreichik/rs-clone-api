@@ -11,6 +11,8 @@ const secret = 'secretCode007';
 const COOKIE_NAME = 'cp-access';
 const TOKEN_EXPIRATION_DAYS = 7;
 
+const getTokenExpiration = (days) => days * 24 * 60 * 60000;
+
 export const checkUsername = async (req, res) => {
   try {
     const user = await UserModel.findOne({ username: req.params.uniqName });
@@ -58,7 +60,7 @@ export const register = async (req, res) => {
 
     res
       .cookie(COOKIE_NAME, token, {
-        maxAge: (TOKEN_EXPIRATION_DAYS * 24 * 60 * 60000),
+        maxAge: getTokenExpiration(TOKEN_EXPIRATION_DAYS),
         httpOnly: true,
         sameSite: 'none',
         secure: true,
@@ -96,7 +98,7 @@ export const login = async (req, res) => {
 
     res
       .cookie(COOKIE_NAME, token, {
-        maxAge: TOKEN_EXPIRATION_DAYS * 24 * 60 * 60000,
+        maxAge: getTokenExpiration(TOKEN_EXPIRATION_DAYS),
         httpOnly: true,
         sameSite: 'none',
         secure: true,
@@ -223,7 +225,7 @@ export const githubAuth = async (req, res) => {
     const token = getToken(user);
 
     res.cookie(COOKIE_NAME, token, {
-      maxAge: TOKEN_EXPIRATION_DAYS * 24 * 60 * 60000,
+      maxAge: getTokenExpiration(TOKEN_EXPIRATION_DAYS),
       httpOnly: true,
       sameSite: 'none',
       secure: true,

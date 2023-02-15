@@ -166,29 +166,21 @@ export const addInLoved = async (req, res) => {
     let inc;
 
     if (index === -1) {
-
       inc = 1;
       loved.push(req.params.id);
-      UserModel.findOneAndUpdate({ _id: req.userId }, { loved },
-        (err) => {
-          if (err) {
-            console.log(err);
-            return res.status(500).json(serverError);
-          }
-        }
-      );
 
     } else {
-
       inc = -1;
       loved.splice(index, 1);
-      UserModel.findOneAndUpdate({ _id: req.userId }, { loved }, (err) => {
-        if (err) {
-        console.log(err);
-        return res.status(500).json(serverError);
-        }
-      });
     }
+
+    UserModel.findOneAndUpdate({ _id: req.userId }, { loved }, (err) => {
+      if (err) {
+          console.log(err);
+          return res.status(500).json(serverError);
+        }
+      }
+    );
 
     PenModel.findOneAndUpdate(
       { _id: req.params.id },
