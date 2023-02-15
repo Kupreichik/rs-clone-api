@@ -22,12 +22,16 @@ const router = express.Router();
 *         username:
 *           type: string
 *           description: The uniq login username
+*         loved:
+*           type: Array
+*           description: Array with id of loved pens
 *         avatar:
 *           type: string
 *           description: URL avatar user image
 *       example:
 *         name: Bill Gates
 *         username: billy55
+*         loved: ["63e4d9af9e4d3c6019306b3f"]
 *         avatar: https://rs-clone-api.onrender.com/images/user-default-avatar.jpg
 *     UserData:
 *       type: object
@@ -126,6 +130,52 @@ router.get('/username/:uniqName', userController.checkUsername);
 *                   example: Some server error
 */
 router.get('/me', userController.checkAuth, userController.getMe);
+
+/**
+* @swagger
+* /users/me:
+*   patch:
+*     summary: Update name of user
+*     tags: [Users]
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               name:
+*                 type: string
+*                 example: New Name
+*     responses:
+*       200:
+*         description: User data was successfully updated 
+*         content:
+*           application/json:
+*             schema:
+*             $ref: '#/components/schemas/User'
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.patch('/me', userController.checkAuth, userController.changeName);
 
 /**
 * @swagger

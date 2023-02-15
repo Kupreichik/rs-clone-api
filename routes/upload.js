@@ -1,5 +1,5 @@
 import express from 'express';
-import { imgUpload, upload } from '../controllers/uploadController.js';
+import { imgRemove, imgUpload, upload } from '../controllers/uploadController.js';
 import { checkAuth } from '../controllers/userController.js';
 
 const router = express.Router();
@@ -54,5 +54,51 @@ const router = express.Router();
 *                   example: Failed to upload
 */
 router.post('/', checkAuth, upload.single('image'), imgUpload);
+
+/**
+* @swagger
+* tags:
+*   name: Uploads
+*   description: Images upload
+*/
+/**
+* @swagger
+* /upload:
+*   delete:
+*     summary: Remove avatar user image and returns default avatar url
+*     tags: [Uploads]
+*     responses:
+*       200:
+*         description: The image was deleted successfully
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 avatar:
+*                   type: string
+*                   example: https://rs-clone-api.onrender.com/images/user-default-avatar.webp
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.delete('/', checkAuth, imgRemove);
 
 export default router;

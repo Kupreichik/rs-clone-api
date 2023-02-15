@@ -91,6 +91,172 @@ const router = express.Router();
 *   name: Pens
 *   description: The pens publishing managing API
 */
+/**
+* @swagger
+* /pens:
+*   get:
+*     summary: Returns json pens data
+*     tags: [Pens]
+*     parameters:
+*       - name: _limit
+*         in: query
+*         description: Count of getting pens (returns all pens by default)
+*         required: false
+*         schema:
+*           type: integer
+*         style: form
+*         example: 4
+*     responses:
+*       200:
+*         description: Success response
+*         content:
+*           application/json:
+*             schema:
+*               type: array
+*               items:
+*                 type: object
+*                 $ref: '#/components/schemas/PenData'
+*         headers:
+*           X-Total-Count: 
+*             description: The number of pens in database
+*             schema:
+*               type: integer
+*               example: 15237
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.get('/', pensController.getAll);
+
+/**
+* @swagger
+* /pens/one/{id}:
+*   get:
+*     summary: Returns json one pen data by id
+*     tags: [Pens]
+*     parameters:
+*       - name: id
+*         in: path
+*         description: Pen id
+*         required: true
+*         schema:
+*           type: string
+*         example: 63e4d9af9e4d3c6019306b3f
+*     responses:
+*       200:
+*         description: Success response
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               $ref: '#/components/schemas/PenData'
+*       404:
+*         description: Pen not found
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Pen not found
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.get('/one/:id', pensController.getOne);
+
+/**
+* @swagger
+* /pens/my:
+*   get:
+*     summary: Returns owned user json pens data
+*     tags: [Pens]
+*     responses:
+*       200:
+*         description: Success response
+*         content:
+*           application/json:
+*             schema:
+*               type: array
+*               items:
+*                 type: object
+*                 $ref: '#/components/schemas/PenData'
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.get('/my', checkAuth, pensController.getMy);
+
+/**
+* @swagger
+* /pens/loved:
+*   get:
+*     summary: Returns loved user json pens data
+*     tags: [Pens]
+*     responses:
+*       200:
+*         description: Success response
+*         content:
+*           application/json:
+*             schema:
+*               type: array
+*               items:
+*                 type: object
+*                 $ref: '#/components/schemas/PenData'
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.get('/loved', checkAuth, pensController.getLoved);
 
 /**
 * @swagger
@@ -156,37 +322,39 @@ const router = express.Router();
 *                   example: Some server error
 */
 router.post('/', checkAuth, penCreateValidation, handleValidationErrors, pensController.create);
+
 /**
 * @swagger
-* /pens:
-*   get:
-*     summary: Returns json pens data
+* /pens/{id}:
+*   patch:
+*     summary: Add pen in loved
 *     tags: [Pens]
 *     parameters:
-*       - name: _limit
-*         in: query
-*         description: Count of getting pens (default value is 10)
-*         required: false
+*       - name: id
+*         in: path
+*         description: Pen id
+*         required: true
 *         schema:
-*           type: integer
-*         style: form
-*         example: 4
+*           type: string
+*         example: 63e4d9af9e4d3c6019306b3f
+*     requestBody:
 *     responses:
 *       200:
-*         description: Success response
+*         description: Pen was successfully updated
 *         content:
 *           application/json:
 *             schema:
-*               type: array
-*               items:
-*                 type: object
-*                 $ref: '#/components/schemas/PenData'
-*         headers:
-*           X-Total-Count: 
-*             description: The number of pens in database
+*             $ref: '#/components/schemas/PenData'
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
 *             schema:
-*               type: integer
-*               example: 15237
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
 *       500:
 *         description: Some server error
 *         content:
@@ -198,30 +366,68 @@ router.post('/', checkAuth, penCreateValidation, handleValidationErrors, pensCon
 *                   type: string
 *                   example: Some server error
 */
-router.get('/', pensController.getAll);
+router.patch('/:id', checkAuth, pensController.addInLoved);
 
 /**
 * @swagger
 * /pens/{id}:
-*   get:
-*     summary: Returns json one pen data by id
+*   put:
+*     summary: Update pen
 *     tags: [Pens]
 *     parameters:
-*       - id: _limit
+*       - name: id
 *         in: path
 *         description: Pen id
 *         required: true
 *         schema:
 *           type: string
 *         example: 63e4d9af9e4d3c6019306b3f
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               title:
+*                 type: string
+*                 description: Title of pen
+*               html:
+*                 type: string
+*                 description: HTML code
+*               css:
+*                 type: string
+*                 description: CSS code
+*               js:
+*                 type: string
+*                 description: JavaScript code
 *     responses:
 *       200:
-*         description: Success response
+*         description: Pen was successfully updated
+*         content:
+*           application/json:
+*             schema:
+*             $ref: '#/components/schemas/Pen'
+*       400:
+*         description: Bad request
 *         content:
 *           application/json:
 *             schema:
 *               type: object
-*               $ref: '#/components/schemas/PenData'
+*               example:
+*                 msg: CSS must be sent
+*                 param: css
+*                 location: body
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
 *       404:
 *         description: Pen not found
 *         content:
@@ -243,7 +449,64 @@ router.get('/', pensController.getAll);
 *                   type: string
 *                   example: Some server error
 */
-router.get('/:id', pensController.getOne);
+router.put('/:id', checkAuth, penCreateValidation, handleValidationErrors, pensController.update);
 
+/**
+* @swagger
+* /pens/{id}:
+*   delete:
+*     summary: Remove pen
+*     tags: [Pens]
+*     parameters:
+*       - name: id
+*         in: path
+*         description: Pen id
+*         required: true
+*         schema:
+*           type: string
+*         example: 63e4d9af9e4d3c6019306b3f
+*     responses:
+*       200:
+*         description: Pen was successfully deleted
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 success:
+*                   type: boolean
+*                   example: true
+*       403:
+*         description: Access token is missing or invalid
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Access token is missing or invalid
+*       404:
+*         description: Pen not found
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Pen not found
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: Some server error
+*/
+router.delete('/:id', checkAuth, penCreateValidation, handleValidationErrors, pensController.remove);
 
 export default router;

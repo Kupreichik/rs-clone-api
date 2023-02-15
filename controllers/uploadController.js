@@ -42,3 +42,41 @@ export const imgUpload = (req, res) => {
   res.json({ avatar: url });
 };
 
+export const imgRemove = async (req, res) => {
+  const defaultUrl = `${BASE_URL}/images/user-default-avatar.webp`;
+  try {
+    const { avatar } = await UserModel.findOne({ _id: req.userId });
+
+    if (avatar === defaultUrl) return res.json({ avatar });
+
+    const file = avatar.replace(`${BASE_URL}/`, '');
+
+    fs.unlink(file, (err) => {
+      if (err) return res.status(500).json({
+        message: 'Some server error',
+      });
+
+      UserModel.findOneAndUpdate(
+        {
+          _id: req.userId,
+        },
+        {
+          avatar: defaultUrl,
+        },
+        (err) => {
+          if (err) {
+            console.log(err);
+            throw err;
+          } else {
+            res.json({ avatar: defaultUrl });
+          }
+        }
+      );
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Some server error',
+    });
+  }
+}
