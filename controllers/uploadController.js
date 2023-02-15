@@ -38,27 +38,37 @@ export const imgUpload = async (req, res) => {
       if (avatar !== defaultUrl) {
         fs.unlink(file, (err) => {
           if (err) console.log('failed to delete file ', err.message);
+            UserModel.findOneAndUpdate(
+              { _id: req.userId },
+              { avatar: url },
+              (err) => {
+                if (err) {
+                  console.log(err);
+                  return res.status(500).json({
+                    message: 'Some server error',
+                  });
+                } else {
+                  res.json({ avatar: url });
+                }
+              }
+            );
         });
-      }
-
-      UserModel.findOneAndUpdate(
-        {
-          _id: req.userId,
-        },
-        {
-          avatar: url,
-        },
-        (err) => {
-          if (err) {
-            console.log(err);
-            return res.status(500).json({
-              message: 'Some server error',
-            });
-          } else {
-            res.json({ avatar: url });
+      } else {
+        UserModel.findOneAndUpdate(
+          { _id: req.userId },
+          { avatar: url },
+          (err) => {
+            if (err) {
+              console.log(err);
+              return res.status(500).json({
+                message: 'Some server error',
+              });
+            } else {
+              res.json({ avatar: url });
+            }
           }
-        }
-      );
+        );
+      }
     });
   } catch (err) {
     res.status(500).json({
