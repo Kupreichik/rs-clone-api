@@ -48,42 +48,6 @@ const router = express.Router();
 *           name: Bill Gates
 *           username: billy55
 *           avatar: https://rs-clone-api.onrender.com/images/63e49eebee7d38e87d48086d.webp
-*     Pen:
-*       type: object
-*       properties:
-*         _id:
-*           type: string
-*           description: Uniq id of pen
-*         title:
-*           type: string
-*           description: Title of pen
-*         html:
-*           type: string
-*           description: HTML code
-*         css:
-*           type: string
-*           description: CSS code
-*         js:
-*           type: string
-*           description: JavaScript code
-*         likesCount:
-*           type: number
-*           description: Number of pen likes
-*         viewsCount:
-*           type: number
-*           description: Number of pen views
-*         user:
-*           type: string
-*           description: Pen author id
-*       example:
-*         _id: 63e3dbdeb1b7b5b529afde46
-*         title: Simple Card
-*         html: <div class="left"></div>
-*         css: ".left { height: 300px; width: 150px; background-color: #ce6746; }"
-*         js: "console.log(true)"
-*         likesCount: 1
-*         viewsCount: 5
-*         user: 63e4d9af9e4d3c6019306b3f
 */
 /**
 * @swagger
@@ -289,7 +253,7 @@ router.get('/loved', checkAuth, pensController.getLoved);
 *         content:
 *           application/json:
 *             schema:
-*             $ref: '#/components/schemas/Pen'
+*             $ref: '#/components/schemas/PenData'
 *       400:
 *         description: Bad request
 *         content:
@@ -407,7 +371,7 @@ router.patch('/:id', checkAuth, pensController.addInLoved);
 *         content:
 *           application/json:
 *             schema:
-*             $ref: '#/components/schemas/Pen'
+*             $ref: '#/components/schemas/PenData'
 *       400:
 *         description: Bad request
 *         content:
