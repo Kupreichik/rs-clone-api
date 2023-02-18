@@ -471,6 +471,6 @@ router.put('/:id', checkAuth, penCreateValidation, handleValidationErrors, pensC
 *                   type: string
 *                   example: Some server error
 */
-router.delete('/:id', checkAuth, penCreateValidation, handleValidationErrors, pensController.remove);
+router.delete('/:id', checkAuth, pensController.remove);
 
 export default router;
