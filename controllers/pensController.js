@@ -17,8 +17,17 @@ export const create = async (req, res) => {
     });
 
     const pen = await doc.save();
+    const data = await PenModel.findOne({ _id: pen._doc._id }).populate({
+      path: 'user',
+      select: {
+        name: 1,
+        username: 1,
+        avatar: 1,
+        _id: 0,
+      },
+    });
 
-    const { __v, ...penData } = pen._doc;
+    const { __v, ...penData } = data._doc;
     res.json(penData);
 
   } catch (err) {

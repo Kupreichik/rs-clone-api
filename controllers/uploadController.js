@@ -25,9 +25,10 @@ export const upload = multer({ storage }).single('image');
 export const imgUpload = async (req, res) => {
   try {
     upload(req, res, async (err) => {
-      if (err) return res.status(500).json({
-        message: 'Server error while writing file',
-      });
+      if (!req.file || err)
+        return res.status(500).json({
+          message: 'Server error while writing file',
+        });
 
       const defaultUrl = `${BASE_URL}/images/user-default-avatar.webp`;
       const url = `${BASE_URL}/images/${req.file.originalname}`;
@@ -35,23 +36,23 @@ export const imgUpload = async (req, res) => {
       const { avatar } = await UserModel.findOne({ _id: req.userId });
       const file = avatar.replace(`${BASE_URL}/`, '');
 
-      if (avatar !== defaultUrl) {
+      if (fs.existsSync(file) && avatar !== defaultUrl) {
         fs.unlink(file, (err) => {
           if (err) console.log('failed to delete file ', err.message);
-            UserModel.findOneAndUpdate(
-              { _id: req.userId },
-              { avatar: url },
-              (err) => {
-                if (err) {
-                  console.log(err);
-                  return res.status(500).json({
-                    message: 'Some server error',
-                  });
-                } else {
-                  res.json({ avatar: url });
-                }
+          UserModel.findOneAndUpdate(
+            { _id: req.userId },
+            { avatar: url },
+            (err) => {
+              if (err) {
+                console.log(err);
+                return res.status(500).json({
+                  message: 'Some server error',
+                });
+              } else {
+                res.json({ avatar: url });
               }
-            );
+            }
+          );
         });
       } else {
         UserModel.findOneAndUpdate(
@@ -85,28 +86,32 @@ export const imgRemove = async (req, res) => {
 
     if (avatar === defaultUrl) return res.json({ avatar });
 
-    fs.unlink(file, (err) => {
-      if (err) return res.status(500).json({
-        message: 'Some server error',
+    if (fs.existsSync(file)) {
+      fs.unlinkSync(file, (err) => {
+        if (err)
+          return res.status(500).json({
+            message: 'Some server error',
+          });
       });
+    }
 
-      UserModel.findOneAndUpdate(
-        {
-          _id: req.userId,
-        },
-        {
-          avatar: defaultUrl,
-        },
-        (err) => {
-          if (err) {
-            console.log(err);
-            throw err;
-          } else {
-            res.json({ avatar: defaultUrl });
-          }
+    UserModel.findOneAndUpdate(
+      {
+        _id: req.userId,
+      },
+      {
+        avatar: defaultUrl,
+      },
+      (err) => {
+        if (err) {
+          console.log(err);
+          throw err;
+        } else {
+          res.json({ avatar: defaultUrl });
         }
-      );
-    });
+      }
+    );
+  
   } catch (err) {
     console.log(err);
     res.status(500).json({
