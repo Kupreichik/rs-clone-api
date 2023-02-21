@@ -230,7 +230,7 @@ export const githubAuth = async (req, res) => {
       sameSite: 'none',
       secure: true,
     });
-    res.redirect(`http://localhost:3000${path}`);
+    res.redirect(`https://rss-clone.netlify.app${path}`);
 
   } catch (err) {
     console.log(err.message);
