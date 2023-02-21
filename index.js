@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import usersRouter from './routes/users.js';
 import pensRouter from './routes/pens.js';
 import uploadRouter from './routes/upload.js';
+import { createRoom, onSocketConnection } from './controllers/socketController.js'
 import http from 'http';
 import { Server } from 'socket.io';
 
@@ -17,12 +18,12 @@ export const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET
 
 export const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+export const io = new Server(server);
 
 
 mongoose.set('strictQuery', true);
 mongoose
-  .connect(process.env.MONGODB_URI || 'mongodb+srv://admin:yyyyyy@cluster0.qbtixrj.mongodb.net/CodePen-clone?retryWrites=true&w=majority')
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log('DB connected successfully'))
   .catch((err) => console.log('DB error', err));
 
@@ -59,7 +60,11 @@ app.use('/pens', pensRouter);
 app.use('/upload', uploadRouter);
 app.use('/images', express.static('images'));
 
-app.listen(PORT, (err) => {
+app.post('/create-room', createRoom);
+
+io.on('connection', onSocketConnection);
+
+server.listen(PORT, (err) => {
   if (err) return console.log(err);
   console.log(`Server is running on port ${PORT}`);
 });

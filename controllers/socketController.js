@@ -1,16 +1,30 @@
 import { nanoid } from 'nanoid';
-import moment from 'moment';
 import UserModel from '../models/User.js';
+import { io } from '../index.js';
 
 const roomIdLength = 12;
+const roomsCurrentData = {};
 
 export const createRoom = async (req, res) => {
   try {
-    //const { _doc: { username } } = await UserModel.findOne({ _id: req.userId });
-    const { userId } = req;
     const roomId = nanoid(roomIdLength);
-
-
-  } catch (err) {}
-  
+    const { html, css, js } = req.body;
+    roomsCurrentData[roomId] = { html, css, js };
+    res.json({ roomId })
+  } catch (err) {
+    console.log('err')
+  }
 }
+
+export const onSocketConnection = (socket) => {
+  socket.on('CODE_CHANGED', async ({ roomId, senderId, code }) => {
+    roomsCurrentData[roomId] = code;
+    socket.to(roomId).emit('CODE_CHANGED', { senderId, code });
+  });
+
+  socket.on('CONNECTED_TO_ROOM', async ({ roomId, roomUserId }) => {
+    socket.join(roomId);
+    const code = roomsCurrentData[roomId];
+    io.in(roomId).emit('START_CODE', { senderId: roomUserId, code });
+  });
+};
