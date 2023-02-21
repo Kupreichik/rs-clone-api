@@ -7,6 +7,9 @@ import cookieParser from 'cookie-parser';
 import usersRouter from './routes/users.js';
 import pensRouter from './routes/pens.js';
 import uploadRouter from './routes/upload.js';
+import { createRoom, onSocketConnection } from './controllers/socketController.js'
+import http from 'http';
+import { Server } from 'socket.io';
 
 const PORT = process.env.PORT || 3033;
 export const BASE_URL = 'https://rs-clone-api.onrender.com';
@@ -14,6 +17,9 @@ export const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 export const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET
 
 export const app = express();
+const server = http.createServer(app);
+export const io = new Server(server);
+
 
 mongoose.set('strictQuery', true);
 mongoose
@@ -54,7 +60,11 @@ app.use('/pens', pensRouter);
 app.use('/upload', uploadRouter);
 app.use('/images', express.static('images'));
 
-app.listen(PORT, (err) => {
+app.post('/create-room', createRoom);
+
+io.on('connection', onSocketConnection);
+
+server.listen(PORT, (err) => {
   if (err) return console.log(err);
   console.log(`Server is running on port ${PORT}`);
 });
