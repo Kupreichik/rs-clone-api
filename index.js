@@ -23,7 +23,9 @@ export const io = new Server(server);
 
 mongoose.set('strictQuery', true);
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(
+    process.env.MONGODB_URI
+  )
   .then(() => console.log('DB connected successfully'))
   .catch((err) => console.log('DB error', err));
 
