@@ -75,7 +75,7 @@ export const getOne = async (req, res) => {
         returnDocument: 'after',
       },
       (err, doc) => {
-        if (err) {
+        if (err || !doc) {
           console.log(err);
           return res.status(404).json({
             message: 'Pen not found',
